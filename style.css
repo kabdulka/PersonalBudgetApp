@@ -232,8 +232,8 @@ h2 {
 }
 
 .item__percentage {
-    /*float: left;*/
-    /*margin-left: 20px;*/
+    float: left;
+    margin-left: 20px;
     /*transition: transform 0.3s;*/
     /*font-size: 11px;*/
     /*background-color: #FFDAD9;*/
@@ -293,6 +293,7 @@ not directly beside the value */
 .item:hover .item__percentage { 
     transform: translateX(-20px); 
 }
+
 
 
 
