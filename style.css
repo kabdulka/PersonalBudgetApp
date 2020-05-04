@@ -266,7 +266,7 @@ h2 {
     cursor: pointer;
     display: inline-block;
     vertical-align: middle;
-    line-height: 1;
+    /*line-height: 1;*/
     display: none;
 }
 
