@@ -233,7 +233,7 @@ h2 {
 
 .item__percentage {
     float: left;
-    /*margin-left: 20px;*/
+    margin-left: 20px;
     /*transition: transform 0.3s;*/
     /*font-size: 11px;*/
     /*background-color: #FFDAD9;*/
