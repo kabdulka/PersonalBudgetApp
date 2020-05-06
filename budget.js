@@ -178,6 +178,35 @@ var UIController = (function() {
 		expensesPercentageLabel: ".item__percentage"
 	};
 
+	// formats the expense and income numbers
+    // ex) 2300.5623 --> + 2,300.56
+    // 2000 --> 2,000.00
+    // 250000 --> 250,000 
+    var formatNumber = function(num, type) {
+    	var numSplitArr, decimalNum, int, intLength, sign;
+    	num = Math.abs(num);
+    	num = num.toFixed(2);
+    	numSplitArr = num.split('.');
+    	int = numSplitArr[0];
+    	intLength = int.length;
+
+    	if (intLength > 3) {
+    		int = int.substr(0, intLength-3) + ',' + int.substr(intLength-3, intLength);
+    	}
+
+    	// type === 'exp' ? sign = '-' : sign = '+';
+    	if (type === 'exp') {
+    		sign = '-';
+    	} else {
+    		sign = '+';
+    	}
+
+    	decimalNum = numSplitArr[1];
+    		
+    	return sign + ' ' + int + '.' + decimalNum;
+    		
+    };
+
     // make the retrieved input values public
     return {
     	getInput: function() {
@@ -203,7 +232,7 @@ var UIController = (function() {
     		// replace placeholder text with some actual data
     		newHtml = html.replace('%id%', obj.id);
     		newHtml = newHtml.replace('%description%', obj.description);
-    		newHtml = newHtml.replace('%value%', obj.value);
+    		newHtml = newHtml.replace('%value%', formatNumber(obj.value, type));
 
     		// insert the HTML into the DOM
     		document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
@@ -232,9 +261,15 @@ var UIController = (function() {
     	},
 
     	displayBudget: function(obj) {
-    		$(DOMstrings.budgetLabel).text(obj.budget);
-    		$(DOMstrings.expenseLabel).text(obj.totalExp);
-    		$(DOMstrings.incomeLabel).text(obj.totalInc);
+    		var type;
+    		if (obj.budget > 0) {
+    			type = 'inc';
+    		} else {
+    			type = 'exp';
+    		}
+    		$(DOMstrings.budgetLabel).text(formatNumber(obj.budget, type));
+    		$(DOMstrings.expenseLabel).text(formatNumber(obj.totalExp, 'exp'));
+    		$(DOMstrings.incomeLabel).text(formatNumber(obj.totalInc, 'inc'));
     		$(DOMstrings.percentageLabel).text(obj.percentage);
 
     		if (obj.percentage > 0) {
@@ -267,6 +302,8 @@ var UIController = (function() {
     			}
     		});
     	},
+
+
 
     	// expose DOMstrings to be public
     	getDOMstrings: function() {
