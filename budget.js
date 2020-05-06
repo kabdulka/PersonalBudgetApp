@@ -13,12 +13,12 @@ var budgetController = (function() {
 		if (totalIncome > 0) {
 			this.percentage = Math.round((this.value / totalIncome)*100);
 		} else {
-			this.precentage = -1;
+			this.percentage = -1;
 		}
 	};
 
 	Expense.prototype.getPercentage = function() {
-		return this.precentage;
+		return this.percentage;
 	};
 
 	var Income = function(id, description, value) {
@@ -127,14 +127,14 @@ var budgetController = (function() {
 
 		// calculate the percentage on each individual object
 		calculatePercentages: function() {
-			data.allItems.exp.forEach(function (current, i, array) {
+			data.allItems.exp.forEach(function (current) {
 				current.calcPercentage(data.totals.inc);
 			}); 
 		},
 
 		// return an array with all the calculated percetages
 		getPercentages: function () {
-			var allPercentages = data.allItems.exp.map(function(current, i, array) {
+			var allPercentages = data.allItems.exp.map(function(current) {
 				return current.getPercentage();
 			});
 			return allPercentages;
@@ -148,10 +148,6 @@ var budgetController = (function() {
 				percentage: data.percentage
 			};
 		},
-
-		// getPercentage: function() {
-
-		// },
 
 		testing: function () {
 			console.log(data.allItems.exp[0].description);
@@ -178,7 +174,8 @@ var UIController = (function() {
 		expenseLabel: ".budget__expenses--value",
 		percentageLabel: ".budget__expenses--percentage",
 		container: ".container",
-		delBtnId: ".ion-ios-close-outline"
+		delBtnId: ".ion-ios-close-outline",
+		expensesPercentageLabel: ".item__percentage"
 	};
 
     // make the retrieved input values public
@@ -248,6 +245,29 @@ var UIController = (function() {
     		}
     	},
 
+    	displayPercentages: function (percentages) {
+
+    		// var fields = $(DOMstrings.expensesPercentageLabel);
+    		var fields = document.querySelectorAll(DOMstrings.expensesPercentageLabel);
+
+    		var nodeListForEach = function(list, callback) {
+    			for (var i = 0; i < list.length; i++) {
+    				callback(list[i], i);
+    			}
+    		};
+    		// the second parameter is the callback method above
+    		nodeListForEach(fields, function(current, index)  {
+    			alert("Printing current percentage " + percentages[index]);
+    			// function(current, i) is callback
+    			if (percentages[index] > 0) {
+
+    				current.textContent = percentages[index] + "%";
+    			} else {
+    				current.textContent = "---";
+    			}
+    		});
+    	},
+
     	// expose DOMstrings to be public
     	getDOMstrings: function() {
     		return DOMstrings;
@@ -302,6 +322,7 @@ var controller = (function(budgetCtrl, UICtrl) {
 		var allPercentages = budgetCtrl.getPercentages();
 
 		// update UI
+		UICtrl.displayPercentages(allPercentages);
 	}
 
 	var ctrlAddItem = function() {
