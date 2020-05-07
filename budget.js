@@ -175,7 +175,8 @@ var UIController = (function() {
 		percentageLabel: ".budget__expenses--percentage",
 		container: ".container",
 		delBtnId: ".ion-ios-close-outline",
-		expensesPercentageLabel: ".item__percentage"
+		expensesPercentageLabel: ".item__percentage",
+		dateLabel: ".budget__title--month"
 	};
 
 	// formats the expense and income numbers
@@ -303,7 +304,14 @@ var UIController = (function() {
     		});
     	},
 
-
+    	displayDate: function () {
+    		var now, months, month, day, year;
+    		now = new Date();
+    		months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    		month = now.getMonth();	
+    		year = now.getFullYear();
+    		$(DOMstrings.dateLabel).text(months[month] + " " + year);
+    	},
 
     	// expose DOMstrings to be public
     	getDOMstrings: function() {
@@ -425,7 +433,8 @@ var controller = (function(budgetCtrl, UICtrl) {
 
 	return {
 		init: function() {
-			console.log("Application has started");
+			// console.log("Application has started");
+			UICtrl.displayDate();
 			UICtrl.displayBudget({budget: 0,
 				totalInc: 0,
 				totalExp: 0,
