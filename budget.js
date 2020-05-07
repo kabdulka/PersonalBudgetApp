@@ -208,6 +208,12 @@ var UIController = (function() {
     		
     };
 
+    var nodeListForEach = function(list, callback) {
+    	for (var i = 0; i < list.length; i++) {
+    		callback(list[i], i);
+    	}
+    };
+
     // make the retrieved input values public
     return {
     	getInput: function() {
@@ -286,14 +292,9 @@ var UIController = (function() {
     		// var fields = $(DOMstrings.expensesPercentageLabel);
     		var fields = document.querySelectorAll(DOMstrings.expensesPercentageLabel);
 
-    		var nodeListForEach = function(list, callback) {
-    			for (var i = 0; i < list.length; i++) {
-    				callback(list[i], i);
-    			}
-    		};
     		// the second parameter is the callback method above
     		nodeListForEach(fields, function(current, index)  {
-    			alert("Printing current percentage " + percentages[index]);
+    			// alert("Printing current percentage " + percentages[index]);
     			// function(current, i) is callback
     			if (percentages[index] > 0) {
 
@@ -311,6 +312,20 @@ var UIController = (function() {
     		month = now.getMonth();	
     		year = now.getFullYear();
     		$(DOMstrings.dateLabel).text(months[month] + " " + year);
+    	},
+
+    	changeType: function() {
+    		var fields = document.querySelectorAll(
+    			DOMstrings.inputType + ',' +
+    			DOMstrings.inputValue + ',' +
+    			DOMstrings.inputDescription
+    		);
+    		
+    		nodeListForEach(fields, function(currentElm){
+    			currentElm.classList.toggle("red-focus");
+    		});
+
+    		document.querySelector(DOMstrings.inputBtn).classList.toggle('red');
     	},
 
     	// expose DOMstrings to be public
@@ -344,6 +359,11 @@ var controller = (function(budgetCtrl, UICtrl) {
 
 		// delete an item using event delegation
 		$(DOM.container).click(ctrlDeleteItem);
+
+		// The change event is sent to an element when its
+		// value changes. This event is limited to <input> elements, <textarea> boxes and <select>
+		// document.getElementsByClassName(DOM.inputType).addEventListener("Change", UICtrl.changeType);
+		$(DOM.inputType).change(UICtrl.changeType);
 	};
 
 	var updateBudget = function () {
@@ -385,7 +405,6 @@ var controller = (function(budgetCtrl, UICtrl) {
 			type = input.type;
 
 			newItem = budgetCtrl.addItem(type, description, value);
-			console.log("testing for " + input);
 			// add the item to the budget controller
 
 			// add the new item to the user interface 
